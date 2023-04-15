@@ -1,0 +1,75 @@
+{% extends "base.html.twig" %}
+{% block body %}
+<title>Аккаунты {{ user_info.surname }} {{ user_info.name }}</title>
+    {% for msg in messages.success %}
+        <div class="alert alert-success" role="alert">
+          {{ msg }}
+        </div>
+    {% endfor %}
+    {% for msg in messages.error %}
+        <div class="alert alert-danger" role="alert">
+          {{ msg }}
+        </div>
+    {% endfor %}
+    
+    <h4>{{ user_info.surname }} {{ user_info.name }} {{ user_info.lastname }}<h4>
+    <b>
+        <a class="btn btn-secondary" onclick="window.history.go(-1); return false;">Назад</a>
+    </b>
+    {% if session.user.role == 1 %}
+        <b>
+          <a class="btn btn-primary" href="/{{version}}/permission/add-permission/{{user_info.iin}}">Добавить доступ</a>
+        </b>
+    {% endif %}
+    
+    <table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Сервер</th>
+            <th scope="col">Домен</th>
+            <th scope="col">Пользователь</th>
+            <th scope="col">Статус</th>
+            <th scope="col">Время запроса</th>
+            <th scope="col">Время обработки</th>
+            <th scope="col"></th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for account in account_list %}
+        <tr>
+            <th scope="row">{{ loop.index }}</th>
+            <td>{{ account.title }}</td>
+            <td><a href="https://{{ account.account_name }}" target="blank">{{ account.account_name }}</a></td>
+            <td>{{ account.account_username }}</td>
+            <td 
+                {% if account.status == 0 %}
+                    style="background-color: #f2f7bc"
+                {% elseif account.status == 1 %}
+                    style="background-color: lightgreen"
+                {% elseif account.status == 2 %}
+                    style="background-color: #ffb3b3"
+                {% elseif account.status == 3 %}
+                    style="background-color: #ffb3b3"
+                {% endif %}>
+                {{ account.status_str }}
+            </td>
+            <td>{{ account.created_at|date("Y-M-d H:i:s") }}</td>
+            <td>
+                {% if account.updated_at is not null %}
+                    {{ account.updated_at|date("Y-M-d H:i:s") }}
+                {% endif %}
+            </td>
+            <td>
+                {% if account.status == 0 %}
+                    <a href="/{{version}}/permission/decision-access/{{account.id}}/1" class="btn btn-success" onclick="return confirm('Вы уверены?')">Одобрить</a>
+                    <a href="/{{version}}/permission/decision-access/{{account.id}}/2" class="btn btn-danger" onclick="return confirm('Вы уверены?')">Отклонить</a>
+                {% elseif account.status == 1 %}
+                    <a href="/{{version}}/permission/decision-access/{{account.id}}/3" class="btn btn-danger" onclick="return confirm('Вы уверены?')">Снять доступ</a>
+                {% endif %}
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+    </table>
+{% endblock %}

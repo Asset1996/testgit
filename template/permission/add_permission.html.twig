@@ -1,0 +1,62 @@
+{% extends "base.html.twig" %}
+{% block body %}
+<title>Добавить доступ {{ user_info.surname }} {{ user_info.name }}</title>
+<b>
+    <a class="btn btn-secondary" onclick="window.history.go(-1); return false;">Назад</a>
+</b>
+<div class="registration_wrap">
+  
+    {% for msg in messages.success %}
+        <div class="alert alert-success" role="alert">
+          {{ msg }}
+        </div>
+    {% endfor %}
+    {% for msg in messages.error %}
+        <div class="alert alert-danger" role="alert">
+          {{ msg }}
+        </div>
+    {% endfor %}
+    
+    <form method="post" action="/{{version}}/permission/get-access/{{user_info.iin}}" class="needs-validation">
+        <p><b>Выберите сервер и аккаунт, на который хотите открыть доступ пользователю <strong>{{user_info.surname}} {{user_info.name}}</strong>:</b></p>
+        <p>
+        <label for="servers_list" class="form-label">Сервер</label>
+        <select id="servers_list" class="form-select" name="servername" onchange="get_list_accounts(this.value)" required>
+        {% for server in server_list %}
+            <option value="{{server.id}}"?>{{server.title}}</option> 
+        {% endfor %}
+        </select>
+        </p>
+        <p>
+        <label for="accounts_list" class="form-label">CPanel аккаунт</label>
+        <select id="accounts_list" class="form-select" name="cplogin" required>
+
+        </select></p>
+        <p><input class="btn btn-primary" type="submit" value="Открыть доступ" name="submitform"></p>
+        <div class="url-info"></div>
+    </form>
+  
+</div>
+
+<script>
+  //ВЫВОДИТ СПИСОК  АККАУНТОВ ПО ВЫБРАННОМУ СЕРВЕРУ
+  function get_list_accounts(id){
+    $("#accounts_list").empty();
+    $.ajax({
+      url: '/{{version}}/permission/get-accounts',
+      method: 'post',
+      //dataType: 'html',
+      data: {'id': id},
+      success: function(res){
+        $('#accounts_list').html(res)
+      },
+      error: function (res) {
+        console.log('error')
+      }
+    });
+  }
+  
+  var default_server_id = $("#servers_list").val();
+  get_list_accounts(default_server_id)
+</script>
+{% endblock %}

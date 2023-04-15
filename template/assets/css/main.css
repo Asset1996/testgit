@@ -1,0 +1,81 @@
+.header{
+    min-height: 40px;
+    background-color: #1d1919;
+    padding: 10px 20px;
+}
+.header_logo h4{
+    color: #f8b739;
+}
+.registaration_block_title{
+    text-align: center;
+    margin-top: 20px;
+}
+.registaration_block{
+    max-width: 600px;
+    margin: 0 auto;
+}
+.registration_wrap{
+    max-width: 650px;
+    background-color: aliceblue;
+    margin: 20px auto;
+    padding: 20px 20px;
+}
+
+#password-strength-status {
+    padding: 1px 10px;
+    color: #FFFFFF;
+    border-radius: 4px;
+    margin-top: 5px;
+}
+.weak-password{
+    background: #FF6600;
+}
+.medium-password{
+    background: #E4DB11;
+}
+.strong-password{
+    background: #12CC1A;
+}
+
+.mainform{
+    background-color: #fff;
+    padding: 10px;
+    max-width: 400px;
+    text-align: center;
+    margin: 100px auto;
+}
+.mainform form p input{
+    width: 100%;
+}
+.access_denied{
+    background-color: lightcoral;
+    padding: 10px 10px;
+    border-radius: 5px;
+}
+.access_granted{
+    background-color: lightgreen;
+    padding: 10px 10px;
+    border-radius: 5px;
+}
+.list-unstyled a{
+    text-decoration: none;
+}
+.handbook_accounts_list{
+    background-color: #fff;
+}
+.needs-validation{
+    position: relative;
+}
+.pull_right{
+    position: absolute;
+    right: 0;
+}
+.logo{
+    text-decoration: none;
+}
+.logo:hover{
+    color: #facc70;
+}
+body{
+    background-color: #f0f0f0;
+}

@@ -1,0 +1,80 @@
+{% extends "base.html.twig" %}
+{% block body %}
+<title>Главная | доступ к CPanel</title>
+<b>
+    <a class="btn btn-secondary" onclick="window.history.go(-1); return false;">Назад</a>
+</b>
+<div class="registration_wrap">
+    {% for msg in messages.success %}
+        <div class="alert alert-success" role="alert">
+          {{ msg }}
+        </div>
+    {% endfor %}
+    {% for msg in messages.error %}
+        <div class="alert alert-danger" role="alert">
+          {{ msg }}
+        </div>
+    {% endfor %}
+
+    <form method="post" action="get_access" class="needs-validation">
+    <p><b>Выберите сервер и аккаунт для получения доступа к временному сеансу CPanel:</b></p>
+    <p>
+      <label for="servers_list" class="form-label">Сервер</label>
+      <select id="servers_list" class="form-select" name="servername" onchange="get_list_accounts(this.value)" required>
+      {% for server in servers %}
+        <option value="{{server.id}}"?>{{server.title}}</option> 
+      {% endfor %}
+      </select>
+    </p>
+    <p>
+      <label for="accounts_list" class="form-label">CPanel аккаунт</label>
+      <select id="accounts_list" class="form-select" name="cplogin" required>
+
+      </select></p>
+    <p><input class="btn btn-primary" type="submit" value="Получить доступ" name="submitform" onclick="get_access(event)"></p>
+    <div class="url-info"></div>
+    </form>
+  
+</div>
+
+<script>
+  //ВЫВОДИТ ВСЕ АККАУНТЫ ВЫБРАННОГО СЕРВЕРА (ЕСЛИ ЕСТЬ ДОСТУП)
+  function get_list_accounts(id, iin){
+    $("#accounts_list").empty();
+    $.ajax({
+      url: 'get-accounts',
+      method: 'post',
+      //dataType: 'html',
+      data: {'id': id, 'iin': '{{session.user.iin}}'},
+      success: function(res){
+        $('#accounts_list').html(res)
+      },
+      error: function (res) {
+        console.log('error')
+      }
+    });
+  }
+  
+  //ДЕЛАЕТ ЗАПРОС НА ПОЛУЧЕНИЕ ДОСТУПА
+  function get_access(e){
+    e.preventDefault();
+    var server_id = $("#servers_list").val();
+    var account_name = $("#accounts_list").val();
+    $.ajax({
+      url: 'get-access',
+      method: 'post',
+      //dataType: 'html',
+      data: {'server_id': server_id, 'account_name': account_name},
+      success: function(res){
+        $('.url-info').html(res)
+      },
+      error: function (res) {
+        console.log('error')
+      }
+    });
+  }
+  
+  var default_server_id = $("#servers_list").val();
+  get_list_accounts(default_server_id, {{session.user.iin}})
+</script>
+{% endblock %}

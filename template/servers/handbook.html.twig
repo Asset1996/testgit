@@ -1,0 +1,94 @@
+{% extends "base.html.twig" %}
+{% block body %}
+<title>Справочник серверов</title>
+<b>
+    <a class="btn btn-secondary" onclick="window.history.go(-1); return false;">Назад</a>
+</b>
+{# <div class="registration_wrap"> #}
+  
+    {% for msg in messages.success %}
+        <div class="alert alert-success" role="alert">
+          {{ msg }}
+        </div>
+    {% endfor %}
+    {% for msg in messages.error %}
+        <div class="alert alert-danger" role="alert">
+          {{ msg }}
+        </div>
+    {% endfor %}
+
+    <div class="row">
+      <label for="servers_list" class="form-label">Сервер</label>
+      <div class="col-6">
+        <form method="post" action="get_access" class="needs-validation">
+          <p>
+            <select id="servers_list" class="form-select" name="servername" onchange="get_list_accounts_handbook(this.value)" style="max-width: 350px" required>
+            {% for server in servers %}
+              <option value="{{server.id}}"?>{{server.title}}</option> 
+            {% endfor %}
+            </select>
+          </p>
+        </form>
+      </div>
+      <div class="col-6">
+        <form class="form-inline" style="justify-content: right">
+          <svg xmlns="http://www.w3.org/2000/svg" style="margin-right: 5px;" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+          </svg>
+          <input class="form-control form-control-sm mr-3 w-75" type="text" placeholder="Пойск"
+            aria-label="Search" onkeyup="search_account(this.value)" style="max-width: 200px;">
+        </form>
+      </div>
+    </div>
+    
+    <p>
+      <label for="accounts_list" class="form-label">CPanel аккаунт</label>
+      <div id="accounts_list" class="handbook_accounts_list" name="cplogin" required>
+        
+      </div>
+    </p>
+  
+{# </div> #}
+
+<script>
+var timeoutId;
+  function get_list_accounts_handbook(id){
+    $("#accounts_list").empty();
+    $.ajax({
+      url: 'get-accounts-handbook',
+      method: 'post',
+      //dataType: 'html',
+      data: {'id': id},
+      success: function(res){
+        $('#accounts_list').html(res)
+      },
+      error: function (res) {
+        console.log('error')
+      }
+    });
+  }
+
+  function search_account(keyword){
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => {
+      var server_id = $('#servers_list').val()
+      $.ajax({
+        url: 'search-account',
+        method: 'post',
+        //dataType: 'html',
+        data: {'server_id': server_id, 'keyword': keyword},
+        success: function(res){
+          $('#accounts_list').html(res)
+        },
+        error: function (res) {
+          console.log('error')
+        }
+      });
+    }, 500);
+  }
+  
+  var default_server_id = $("#servers_list").val();
+  get_list_accounts_handbook(default_server_id)
+</script>
+
+{% endblock %}

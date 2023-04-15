@@ -1,0 +1,30 @@
+<nav id="sidebar">
+    <div class="p-4 pt-5">
+        <ul class="list-unstyled components mb-5">
+            <li class="active">
+                <a href="/{{version}}/servers/">Главная</a>
+            </li>
+            <li>
+                <a href="/{{version}}/servers/handbook">Справочник серверов</a>
+            </li>
+            {% if session.user.role == 1 %}
+                <li>
+                    <a href="/{{version}}/servers/list">Управление серверами</a>
+                </li>
+                <li>
+                    <a class="position-relative" href="/{{version}}/permission/users">
+                        Управление доступами
+                        <span style="top: 25 !important;" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                            <p style="margin: 3px 3px !important;">{{ new_requests }}</p>
+                            <span class="visually-hidden">Необработанные запросы</span>
+                        </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/{{version}}/logs/list">Журнал действии</a>
+                </li>
+            {% endif %}
+            
+        </ul>
+    </div>
+</nav>

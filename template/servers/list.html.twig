@@ -1,0 +1,45 @@
+{% extends "base.html.twig" %}
+{% block body %}
+<title>Список серверов</title>
+    {% for msg in messages.success %}
+        <div class="alert alert-success" role="alert">
+          {{ msg }}
+        </div>
+    {% endfor %}
+    {% for msg in messages.error %}
+        <div class="alert alert-danger" role="alert">
+          {{ msg }}
+        </div>
+    {% endfor %}
+    <b>
+        <a class="btn btn-secondary" onclick="window.history.go(-1); return false;">Назад</a>
+    </b>
+    {% if session.user.role == 1 %}
+        <b>
+          <a class="btn btn-primary" href="add">Добавить сервер</a>
+        </b>
+    {% endif %}
+    
+    <table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Наименование</th>
+            <th scope="col">Описание</th>
+            <th scope="col">Дата добавления</th>
+            <th scope="col"></th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for server in servers_list %}
+        <tr>
+            <th scope="row">{{ loop.index }}</th>
+            <td>{{ server.title }}</td>
+            <td>{{ server.description }}</td>
+            <td>{{ server.created_at }}</td>
+            <td><a href="delete/{{server.id}}" class="btn btn-danger" onclick="return confirm('Вы уверены?')">Удалить сервер</a></td>
+        </tr>
+    {% endfor %}
+    </tbody>
+    </table>
+{% endblock %}

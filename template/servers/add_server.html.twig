@@ -1,0 +1,69 @@
+{% extends "base.html.twig" %}
+{% block body %}
+<title>Добавить сервер</title>
+<b>
+    <a class="btn btn-secondary" onclick="window.history.go(-1); return false;">Назад</a>
+</b>
+<div class="registration_wrap">
+    {% for msg in messages.success %}
+        <div class="alert alert-success" role="alert">
+          {{ msg }}
+        </div>
+    {% endfor %}
+    {% for msg in messages.error %}
+        <div class="alert alert-danger" role="alert">
+          {{ msg }}
+        </div>
+    {% endfor %}
+
+    <form class="needs-validation">
+        <p><b>Добавление сервера</b></p>
+        <p>
+            <label for="servers_title" class="form-label">Сервер</label>
+            <input id="servers_title" type="text" class="form-control" name="title" required>
+        </p>
+        <p>
+            <label for="servers_description" class="form-label">Описание</label>
+            <input id="servers_description" type="description" class="form-control" name="description" required>
+        </p>
+        <p>
+            <label for="servers_login" class="form-label">Логин</label>
+            <input id="servers_login" type="text" class="form-control" name="login" value="root" required>
+        </p>
+        <p>
+            <label for="servers_password" class="form-label">Пароль</label>
+            <input id="servers_password" type="password" class="form-control" name="password" required>
+        </p>
+        <p><input class="btn btn-primary" type="submit" value="Сохранить" name="submitform" onclick="add_server(event)"></p>
+        <div id="result-info"></div>
+    </form>
+  
+</div>
+
+<script>
+  function add_server(el){
+    var title = $("#servers_title").val();
+    var login = $("#servers_login").val();
+    var password = $("#servers_password").val();
+    var description = $("#servers_description").val();
+    if(title != '' && login != '' && password != '') {
+        el.preventDefault()
+        $.ajax({
+            url: 'add-server',
+            method: 'post',
+            //dataType: 'html',
+            data: {'title': title, 'login': login, 'password': password, 'description': description},
+            success: function(res){
+                console.log(res)
+                $('#result-info').html(res)
+            },
+            error: function (res) {
+                console.log('error')
+            }
+        });
+    };    
+
+    
+  }
+</script>
+{% endblock %}

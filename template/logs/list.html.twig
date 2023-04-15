@@ -1,0 +1,59 @@
+{% extends "base.html.twig" %}
+{% block body %}
+<title>Все пользователи</title>
+    {% for msg in messages.success %}
+        <div class="alert alert-success" role="alert">
+          {{ msg }}
+        </div>
+    {% endfor %}
+    {% for msg in messages.error %}
+        <div class="alert alert-danger" role="alert">
+          {{ msg }}
+        </div>
+    {% endfor %}
+    <b>
+        <a class="btn btn-secondary" onclick="window.history.go(-1); return false;">Назад</a>
+    </b>
+    
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">ФИО исполнителя</th>
+                <th scope="col">Описания действия</th>
+                <th scope="col">Дата и время действия</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for log in logs_list %}
+            <tr>
+                <th scope="row">{{ loop.index + offset}}</th>
+                <td>{{ log.name }} {{ log.surname }} {{ log.lastname }}</td>
+                <td>{{ log.action_description }}</td>
+                <td>{{ log.created_at|date("Y-M-d H:m") }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <nav aria-label="...">
+        <ul class="pagination">
+            {% for page in 1..total_pages %}
+                <li class="page-item"><a class="page-link" href="list?page={{ page }}">{{ page }}</a></li>
+            {% endfor %}
+                {# 
+                <li class="page-item disabled">
+                    <a class="page-link" href="list?page={{ page }}" tabindex="-1">Previous</a>
+                </li>
+                <li class="page-item"><a class="page-link" href="list?page=1">1</a></li>
+                <li class="page-item active">
+                    <a class="page-link" href="list?page=2">2 <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="page-item"><a class="page-link" href="list?page=3">3</a></li>
+                <li class="page-item">
+                    <a class="page-link" href="#">Next</a>
+                </li> 
+                #}
+        </ul>
+    </nav>
+{% endblock %}

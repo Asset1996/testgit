@@ -1,0 +1,56 @@
+{% extends "base.html.twig" %}
+{% block body %}
+<title>Все пользователи</title>
+    {% for msg in messages.success %}
+        <div class="alert alert-success" role="alert">
+          {{ msg }}
+        </div>
+    {% endfor %}
+    {% for msg in messages.error %}
+        <div class="alert alert-danger" role="alert">
+          {{ msg }}
+        </div>
+    {% endfor %}
+    <b>
+        <a class="btn btn-secondary" onclick="window.history.go(-1); return false;">Назад</a>
+    </b>
+    
+    <table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">ФИО</th>
+            <th scope="col">Email</th>
+            <th scope="col">Уровень доступа</th>
+            <th scope="col"></th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for user in users_list %}
+        <tr>
+            <th scope="row">{{ loop.index }}</th>
+            <td>
+                <a class="position-relative"  href="user-permission-info/{{user.iin}}">
+                    {{ user.surname }} {{ user.name }} {{ user.lastname }}
+                    {% if user.new_requests !=0 %}
+                        <span style="top: -4 !important;" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                            <p style="margin: 2px 2px !important;">{{ user.new_requests }}</p>
+                            <span class="visually-hidden">Необработанные запросы</span>
+                        </span>
+                    {% endif %}
+                </a>
+            </td>
+            <td>{{ user.email }}</td>
+            <td>
+                {% if user.role == 1 %}
+                    Админ
+                {% elseif user.role == 2 %}
+                    Пользователь
+                {% endif %}
+            </td>
+            <td><a href="dismiss-user/{{user.iin}}" class="btn btn-danger" onclick="return confirm('Вы уверены?')">Уволить</a></td>
+        </tr>
+    {% endfor %}
+    </tbody>
+    </table>
+{% endblock %}
